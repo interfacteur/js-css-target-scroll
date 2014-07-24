@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr" class="sansjs">
+
+<head>
+<meta charset="UTF-8">
+<title>La pseudo-classe ':target‘ avec scroll animé et 'replaceState()', tests complets \ Dunes / Equatorium</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Gaëtan Langhade, interfacteur">
+
+<script>
+document.getElementsByTagName("html")[0].className = "";
+document.createElement("header");
+document.createElement("section");
+document.createElement("nav");
+document.createElement("footer");
+</script>
+
+<style>
+*	{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+body:before	{
+	content: "\8";
+	display: block;
+	height: 0;
+	text-indent: -4444px;
+}
+html, body, header, section, nav, footer, h1, p	{
+	margin: 0;
+	padding: 0;
+}
+header, section, nav, footer	{
+	display: block;
+}
+html	{
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	font-family: sans-serif;
+	font-size: .5em;
+	height: 100%;
+}
+@media only screen and (min-height: 33.33em)	{
+	html	{
+		font-size: 1.5vh;
+	}
+}
+body	{
+	background: #FFF;
+	color: #000;
+	line-height: 1;
+	min-height: 100%;
+	padding-bottom: 20em;
+}
+hr	{
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	height: 0;
+}
+a	{
+	color: #008;
+}
+a:focus	{
+	outline: thin dotted;
+}
+a:active, a:hover	{
+	outline: 0;
+}
+h1	{
+	font-family: Tahoma, Geneva, sans-serif;
+	margin: 1em;
+}
+h1 a	{
+	font-size: .5em;
+}
+section h1	{
+	margin: 0 0 .5em 0;
+}
+section	{
+	background: -webkit-radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	background: -moz-radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	background: -ms-radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	background: -o-radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	background: radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	border: 1px solid #000;
+	border-top: 0;
+	-webkit-border-radius: 0 0 25% 25% / 0 0 20% 20%;
+	-moz-border-radius: 0 0 25% 25% / 0 0 20% 20%;
+	-o-border-radius: 0 0 25% 25% / 0 0 20% 20%;
+	border-radius: 0 0 25% 25% / 0 0 20% 20%;
+	margin: 1em;
+	padding: 0 1em 2.4em 1em;
+}
+@media only screen and (min-width: 72em)	{
+	section	{
+		background: -webkit-radial-gradient(circle, #DDE, #DDE 64px, #FFF 64px);
+		background: -moz-radial-gradient(circle, #DDE, #DDE 64px, #FFF 64px);
+		background: -ms-radial-gradient(circle, #DDE, #DDE 64px, #FFF 64px);
+		background: -o-radial-gradient(circle, #DDE, #DDE 64px, #FFF 64px);
+		background: radial-gradient(circle, #DDE, #DDE 64px, #FFF 64px);
+	}
+}
+section:after,
+form:after	{
+	clear: both;
+	content: " ";
+	display: block;
+}
+ul	{
+	margin: 0 0 .66em 0;
+	padding: 0;
+	text-align: center;
+}
+li	{
+	display: inline-block;
+	padding: 0 .66em;
+}
+p	{
+	float: left;
+	line-height: 1.5;
+	margin-top: .75em;
+	max-width: 28em;
+}
+p img	{
+	background: #DDE;
+	-webkit-border-radius: 0 0 .75em 0 / 0 0 1em 0;
+	-moz-border-radius: 0 0 .75em 0 / 0 0 1em 0;
+	-o-border-radius: 0 0 .75em 0 / 0 0 1em 0;
+	border-radius: 0 0 .75em 0 / 0 0 1em 0;
+	display: inline-block;
+	float: left;
+	height: 4em;
+	margin: 0 1em .1em 0;
+	width: 3em;
+}
+p + p img	{
+	-webkit-border-radius: 0 0 0 .75em / 0 0 0 1em;
+	-moz-border-radius: 0 0 0 .75em / 0 0 0 1em;
+	-o-border-radius: 0 0 0 .75em / 0 0 0 1em;
+	border-radius: 0 0 0 .75em / 0 0 0 1em;
+	float: right;
+	margin: 0 0 .1em 1em;
+}
+nav + p	{
+	margin-bottom: 3em;
+}
+p + p	{
+	float: right;
+}
+@media only screen and (min-width: 38em)	{
+	nav + p	{
+		margin: .75em 4em 0 0;
+	}
+	fieldset	{
+		float: left;
+	}
+	body fieldset:first-child	{
+		margin-bottom: 0;
+	}
+}
+:target	{
+	background: #DDD;
+	color: #445;
+}
+[id^="contenu"]:hover:after,
+[id^="contenu"]:focus:after,
+[id^="contenu"]:target:after	{
+	color: #778;
+	content: "\000009\000009#" attr(id);
+	font-size: .75em;
+	font-style: italic;
+	font-weight: normal;
+	letter-spacing: 2px;
+	white-space: pre;
+}
+[id^="contenu"]:target:after	{
+	font-size: .5em;
+}
+#socle,
+.sansjs #socle	{
+	left: -4444em;
+	position: absolute;
+	top: 0;
+	z-index: -1;
+}
+#socle	{
+	position: fixed;
+}
+footer.principal	{
+	bottom: 0;
+	position: fixed;
+	text-align: center;
+	width: 100%;
+	-webkit-transition: .3s;
+	-moz-transition: .3s;
+	-o-transition: .3s;
+	transition: .3s;
+}
+html:not(.sansjs) footer.principal.astop nav	{
+	opacity: .19;
+}
+footer.principal nav a	{
+	background: #445;
+	color: #FF0;
+	display: inline-block;
+	padding: .5em 1em;
+}
+:target a,
+.sansjs #socle:target ~ footer,
+.sansjs footer.principal li:first-child,
+.sansjs footer.principal li span,
+.sansapi footer.principal li:first-child,
+.sansapi footer.principal li span,
+.sansancre footer.principal li:first-child,
+.sansancre footer.principal li span,
+.sansjs fieldset:first-child	{
+	display: none;
+}
+form	{
+	background: #FFF;
+	position: fixed;
+	right: 0;
+	top: 0;
+}
+fieldset:first-child	{
+	margin-bottom: .66em;
+}
+form p	{
+	display: inline-block;
+	float: none;
+	margin: 0;
+}
+footer footer	{
+	background: rgba(255,255,0,.85);
+	bottom: 0;
+	left: .5em;
+	line-height: 1.6;
+	position: fixed;
+	text-align: left;
+}
+footer footer h1,
+footer footer a	{
+	color: black;
+	font-size: 1em;
+	margin: 0;
+}
+</style>
+</head>
+
+<body tabindex="-1">
+<a tabindex="-1" id="socle">Début de page</a>
+<header>
+	<h1 title=":target, replaceState et .animate({ scrollTop : 0 })">Titre</h1>
+</header>
+<section>
+	<h1 id="contenu1" tabindex="-1"><a href="#contenu1" title="Texte 1">#</a>Texte 1</h1>
+	<nav>
+		<ul>
+			<li><a href="#contenu2">Texte 2</a></li>
+			<li><a href="#contenu3">Texte 3</a></li>
+			<li><a href="#contenu4">Texte 4</a></li>
+			<li><a href="#socle" class="versSocle" title="Début de page">Top</a></li>
+		</ul>
+	</nav>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</section>
+<section>
+	<h1 id="contenu2" tabindex="-1"><a href="#contenu2" title="Texte 2">#</a>Texte 2</h1>
+	<nav>
+		<ul>
+			<li><a href="#contenu1">Texte 1</a></li>
+			<li><a href="#contenu3">Texte 3</a></li>
+			<li><a href="#contenu4">Texte 4</a></li>
+			<li><a href="#socle" class="versSocle" title="Début de page">Top</a></li>
+		</ul>
+	</nav>
+	<p><img src="#" alt="">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</section>
+<section>
+	<h1 id="contenu3" tabindex="-1"><a href="#contenu3" title="Texte 3">#</a>Texte 3</h1>
+	<nav>
+		<ul>
+			<li><a href="#contenu1">Texte 1</a></li>
+			<li><a href="#contenu2">Texte 2</a></li>
+			<li><a href="#contenu4">Texte 4</a></li>
+			<li><a href="#socle" class="versSocle" title="Début de page">Top</a></li>
+		</ul>
+	</nav>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<p><img src="#" alt="">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</section>
+<section>
+	<h1 id="contenu4" tabindex="-1"><a href="#contenu4" title="Texte 4">#</a>Texte 4</h1>
+	<nav>
+		<ul>
+			<li><a href="#contenu1">Texte 1</a></li>
+			<li><a href="#contenu2">Texte 2</a></li>
+			<li><a href="#contenu3">Texte 3</a></li>
+			<li><a href="#socle" class="versSocle" title="Début de page">Top</a></li>
+		</ul>
+	</nav>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
+</section>
+<footer class="principal">
+	<nav>
+		<ul>
+			<li><a id="versSocle1" href="#socle">Début de page &#x02191; PROBLÈME</a></li>
+			<li><a id="versSocle2" href="#socle">Début de page <span>&#x02191; SOLUTION</span></a></li>
+		</ul>
+	</nav>
+	<footer>
+		<h1>La pseudo-classe ':target‘<br>avec scroll animé et 'replaceState()'</h1>
+		<a href="http://interfacteur.blogspot.fr/">Cf. Blogspot, billet<br>du 26 ou 27 juillet 2014</a>
+		<address>
+			<a href="http://gaetan.langhade.net">Interfacteur, 2014</a>
+		</address>
+	</footer>
+</footer>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+;(function() {
+	"use strict";
+/* Interfacteur : code entièrement développé, optimisable via variables d'objets, factorisation */
+	var api = "history" in window && "pushState" in history && "replaceState" in history ? true : false;
+	! api && $("html").addClass("sansapi");
+
+	//Au clic, problème du :target persistant
+	$("#versSocle1").on({
+		click: function(ze) {
+			if (retourner()) //Absence de JavaScript simulée
+				return;
+			ze.preventDefault();
+			if ($("footer.principal").hasClass("astop")) //scroll inférieur à 64 px
+				return;
+			var latence = Math.ceil($(window).height() / (8 * $(window).scrollTop())) * $(window).height() / 4; //durée de l'animation
+			$("body").focus(); //pour la navigation non seulement visuelle
+			$("footer.principal").addClass("astop"); //atténuer la visibilité footer
+			$("body").addClass("enscroll"); //empêcher la surveillance du scroll
+			$(":target").length == 1 && (! $(":target").attr("id").match(/socle/)) && (function() { //re-écrire l'url le cas échéant…
+				if (api) //… avec l'API history : immédiatement
+		//PROBLÈME :
+					return history.pushState("", document.title, window.location.pathname); //clarification de l'url avec création d'un nouvel état dans 'history' mais sans affecter :target
+				setTimeout('document.location.hash = "#";',latence); //… sur des UA obsolètes : à la fin de l'animation
+			})();
+			$("html,body").animate({ scrollTop : 0 },latence,"swing",function() {
+				$("body").removeClass("enscroll");
+	});	}	});
+
+	//Au clic, solution au :target persistant
+	$("#versSocle2").add(".versSocle").on({
+		click: function(ze) {
+			if (retourner()) //Absence de JavaScript simulée
+				return;
+			ze.preventDefault();
+			if ($("footer.principal").hasClass("astop")) //scroll inférieur à 64 px
+				return;
+			var latence = Math.ceil($(window).height() / (8 * $(window).scrollTop())) * $(window).height() / 4; //durée de l'animation
+			$("body").focus(); //pour la navigation non seulement visuelle
+			$("footer.principal").addClass("astop"); //atténuer la visibilité footer
+			$("body").addClass("enscroll"); //empêcher la surveillance du scroll
+			$(":target").length == 1 && (! $(":target").attr("id").match(/socle/)) && (function() { //re-écrire l'url le cas échéant…
+				if (api) { //… avec l'API history : immédiatement
+		//SOLUTION :
+					document.location.hash = "socle"; //le remplacement du :target par un autre qui n'ait aucun effet visuel - ni scroll ni CSS
+					return history.replaceState("", document.title, window.location.pathname); //la clarification de l'url sans création de nouvel état dans 'history'
+				}
+				setTimeout('document.location.hash = "#";',latence); //… sur des UA obsolètes : à la fin de l'animation
+			})();
+			$("html,body").animate({ scrollTop : 0 },latence,"swing",function() { //animer le scroll
+				$("body").removeClass("enscroll");
+	});	}	});
+
+	//Surveillance du scroll
+	var ajuster = function() {
+		if (retourner() || $("body").hasClass(".enscroll"))
+			return;
+		if ((document.location.hash.length > 0 && ! document.location.hash.match(/socle/)) || ($(":target").length > 0 && ! $(":target").attr("id").match(/socle/))) //au chargement : target à retard
+			$("html").removeClass("sansancre");
+		else
+			$("html").addClass("sansancre");
+		if ($(window).scrollTop() > 64)
+			return $(".astop").removeClass("astop");
+		$("footer.principal").addClass("astop");
+	}
+
+	//Au scroll
+	$(window).on({
+		scroll: ajuster,
+		resize: ajuster
+	});
+
+	//Au chargement
+	ajuster();
+	api
+		&& $(":target").length == 0
+		&& document.location.href.match(/#/)
+		&& document.location.hash.length == 0
+		&& history.replaceState("", document.title, window.location.pathname);
+
+	//Simuler l'absence de JavaScript
+	var complement = api ? '\t<fieldset>\n<legend>Simuler l\'absence de l\'API \'history\'</legend>\n\
+\t\t<p><input type="radio" name="hi" id="avecHi" checked value="1"><label for="avecHi">Activer</label></p>\n\
+\t\t<p><input type="radio" name="hi" id="sansHi" value="0"><label for="sansHi">Désactiver</label></p>\n\
+\t</fieldset>\n' : '';
+	$("<form>", { action: "#", html: complement + '\t<fieldset>\n<legend>Simuler l\'absence de JavaScript</legend>\n\
+\t\t<p><input type="radio" name="js" id="avec" checked value="1"><label for="avec">Activer</label></p>\n\
+\t\t<p><input type="radio" name="js" id="sans" value="0"><label for="sans">Désactiver</label></p>\n\
+\t</fieldset>'})
+	.insertAfter("#socle")
+	.on({
+		submit: function(ze) {
+			ze.preventDefault();
+	}	});
+	$("[name='js']").on({
+		change: function(ze) {
+			$("html").toggleClass("sansjs");
+	}	});
+	function retourner() {
+		return $("html").hasClass("sansjs") ? true : false;
+	}
+	$("[name='hi']").on({
+		change: function(ze) {
+			api = true == api ? false : true;
+			$("html").toggleClass("sansapi");
+			api
+				&& $(":target").length == 0
+				&& $("html").addClass("sansancre")
+				&& document.location.href.match(/#/)
+				&& document.location.hash.length == 0
+				&& history.replaceState("", document.title, window.location.pathname);
+	}	});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<title>La pseudo-classe ':target‘ avec scroll animé et 'replaceState()' \ Dunes / Equatorium</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Gaëtan Langhade, interfacteur">
+
+<script>
+document.createElement("footer");
+document.createElement("address");
+</script>
+
+<style>
+html	{
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	height: 100%;
+}
+body:before	{
+	content: "\8";
+	display: block;
+	height: 0;
+	text-indent: -4444px;
+}
+body	{
+	background: #FFF;
+	color: #000;
+	font-family: sans-serif;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+footer,
+address	{
+	display: block;
+}
+p	{
+	display: none;
+}
+div	{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	background: #999;
+	color: #FFF;
+	font-size: 3em;
+	height: 36%;
+	line-height: 6em;
+	margin: .5em auto;
+	min-height: 6em;
+	min-width: 16em;
+	position: relative;
+	text-align: center;
+	width: 66%;
+}
+a,
+strong	{
+	background: transparent;
+	color: #EEF;
+	display: inline-block;
+	line-height: 1;
+	padding: 0 .33em;
+	text-decoration: none;
+	width: auto;
+}
+div a:focus,
+div a:hover	{
+	color: #700;
+	background: #FFF;
+}
+.debut	{
+	bottom: .25em;
+	font-size: 1.5em;
+	position: absolute;
+	right: .25em;
+}
+div:target	{
+	border: .25em solid #522;
+}
+:target strong	{
+	color: #522;
+}
+#socle,
+.sansjs #socle	{
+	left: -4444em;
+	position: absolute;
+	top: 0;
+	z-index: -1;
+}
+#socle	{
+	position: fixed;
+}
+footer	{
+	bottom: 0;
+	left: 0;
+	position: fixed;
+}
+footer h1,
+footer a	{
+	color: black;
+	font-size: 1em;
+}
+</style>
+</head>
+
+<body tabindex="-1">
+<a tabindex="-1" id="socle">Début de page</a>
+<noscript>Cette page est conçue pour fonctionner avec JavaScript - et un navigateur supportant les méthodes de l'API 'history'.</noscript>
+<p>Cette page est conçue pour tout navigateur supportant les méthodes de l'API 'history' - et avec les styles activés.</p>
+<div id="contenu1">
+	<a href="#contenu2"><abbr title="Contenu2">1 &rarr; 2</abbr></a>
+	<a href="#contenu3"><abbr title="Contenu3">1 &rArr; 3</abbr></a>
+	<a href="#socle" class="debut" title="Début de page">&uArr;</a>
+</div>
+<div id="contenu2">
+	<a href="#contenu1"><abbr title="Contenu1">1 &larr; 2</abbr></a>
+	<a href="#contenu3"><abbr title="Contenu3">2 &rarr; 3</abbr></a>
+	<a href="#socle" class="debut" title="Début de page">&uArr;</a>
+</div>
+<div id="contenu3">
+	<a href="#contenu1"><abbr title="Contenu1">1 &lArr; 3</abbr></a>
+	<a href="#contenu2"><abbr title="Contenu2">2 &larr; 3</abbr></a>
+	<a href="#socle" class="debut" title="Début de page">&uArr;</a>
+</div>
+<footer>
+	<h1>La pseudo-classe ':target‘<br>avec scroll animé et 'replaceState()'</h1>
+	<a href="http://interfacteur.blogspot.fr/">Cf. Blogspot billet<br>du 26 ou 27 juillet 2014</a>
+	<address>
+		<br>
+		<a href="http://gaetan.langhade.net">Interfacteur, 2014</a>
+	</address>
+</footer>
+<script src="-ex-target-replacestate-animate/jquery-1.11.0.min.js"></script>
+<script>
+;(function() {
+	"use strict";
+/* Interfacteur : code entièrement développé, optimisable via variables d'objets, factorisation */
+	var api = "history" in window && "pushState" in history && "replaceState" in history ? true : false;
+	! api && $("p").css("display", "block");
+	$(".debut").on({
+		click: function(ze) {
+			ze.preventDefault();
+			var latence = ($(window).height() * $(window).height()) / ($(window).scrollTop() * 3); //durée de l'animation
+			var latence = Math.ceil($(window).height() / (8 * $(window).scrollTop())) * $(window).height() / 4; //durée de l'animation
+			$("body").focus(); //pour la navigation non seulement visuelle
+			$(":target").length == 1 && (! $(":target").attr("id").match(/socle/)) && (function() { //re-écrire l'url le cas échéant…
+				if (api) { //… avec l'API history : immédiatement
+					document.location.hash = "socle"; //le remplacement du :target par un autre qui n'ait aucun effet visuel - ni scroll ni CSS
+					return history.replaceState("", document.title, window.location.pathname); //la clarification de l'url sans création de nouvel état dans 'history'
+				}
+				setTimeout('document.location.hash = "#";',latence); //… sur des UA obsolètes : à la fin de l'animation
+			})();
+			$("html,body").animate({ scrollTop : 0 },latence,"swing") //animer le scroll
+	}	});
+	api
+		&& $(":target").length == 0
+		&& document.location.href.match(/#/)
+		&& document.location.hash.length == 0
+		&& history.replaceState("", document.title, window.location.pathname);
+
+})();
+</script>
+</body>
+</html>
