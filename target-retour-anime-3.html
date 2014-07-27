@@ -361,12 +361,15 @@ les méthodes de l'API 'history' - et avec les styles activés.</pre>
 			ze.preventDefault();
 			var latence = Math.ceil($(window).height() / (8 * $(window).scrollTop())) * $(window).height() / 4; //Durée de l'animation pondérée par le niveau de scroll
 			$("body").focus(); //Modes de navigation extra-visuels
-			$(":target").length == 1 && (! $(":target").attr("id").match(/socle/)) && (function() { //Re-écrire l'url le cas échéant…
+			((document.location.hash.length > 0 && (! document.location.hash.match(/socle/))) || ($(":target").length == 1 && (! $(":target").attr("id").match(/socle/)))) && (function() { //Re-écrire l'url le cas échéant…
 				if (api) { //… avec l'API history : immédiatement
 					document.location.hash = "socle"; //Le remplacement du :target par un autre qui n'ait aucun effet visuel - ni scroll ni CSS
 					return history.replaceState("", document.title, window.location.pathname); //La clarification de l'url sans création de nouvel état dans 'history'
 				}
-				setTimeout('document.location.hash = "#";',latence); //… sur des UA obsolètes : à la fin de l'animation
+				document.location.hash = "socle"; //… sur des UA obsolètes : non en fait cf. attention ci-dessous
+					/*
+						attention à la solution document.location.hash = "#"; : sans setTimeout, effet immédiat ; avec setTimeout, perte de navigation clavier
+					*/
 			})();
 			$("html,body").animate({ scrollTop : 0 },latence,"swing"); //Animer le scroll
 	}	});

@@ -391,11 +391,14 @@ les méthodes de l'API 'history' - et avec les styles activés.</pre>
 			$("body").focus(); //Modes de navigation extra-visuels
 			$("footer").addClass("astop"); //Atténuer la visibilité footer
 			$("body").addClass("enscroll"); //Empêcher la surveillance du scroll
-			$(":target").length == 1 && (! $(":target").attr("id").match(/socle/)) && (function() { //Re-écrire l'url le cas échéant…
+			((document.location.hash.length > 0 && (! document.location.hash.match(/socle/))) || ($(":target").length == 1 && (! $(":target").attr("id").match(/socle/)))) && (function() { //Re-écrire l'url le cas échéant…
 				if (api) //… avec l'API history : immédiatement
 		//PROBLÈME :
 					return history.pushState("", document.title, window.location.pathname); //La clarification de l'url avec création d'un nouvel état dans 'history' mais sans affecter :target
-				setTimeout('document.location.hash = "#";',latence); //… sur des UA obsolètes : à la fin de l'animation
+				document.location.hash = "socle"; //… sur des UA obsolètes : non en fait cf. attention ci-dessous
+					/*
+						attention à la solution document.location.hash = "#"; : sans setTimeout, effet immédiat ; avec setTimeout, perte de navigation clavier
+					*/
 			})();
 			$("html,body").animate({ scrollTop : 0 },latence,"swing",function() {
 				$("body").removeClass("enscroll");
@@ -413,13 +416,16 @@ les méthodes de l'API 'history' - et avec les styles activés.</pre>
 			$("body").focus(); //Modes de navigation extra-visuels
 			$("footer").addClass("astop"); //Atténuer la visibilité footer
 			$("body").addClass("enscroll"); //Empêcher la surveillance du scroll
-			$(":target").length == 1 && (! $(":target").attr("id").match(/socle/)) && (function() { //Re-écrire l'url le cas échéant…
+			((document.location.hash.length > 0 && (! document.location.hash.match(/socle/))) || ($(":target").length == 1 && (! $(":target").attr("id").match(/socle/)))) && (function() { //Re-écrire l'url le cas échéant…
 				if (api) { //… avec l'API history : immédiatement
 		//SOLUTION :
 					document.location.hash = "socle"; //Le remplacement du :target par un autre qui n'ait aucun effet visuel - ni scroll ni CSS
 					return history.replaceState("", document.title, window.location.pathname); //La clarification de l'url sans création de nouvel état dans 'history'
 				}
-				setTimeout('document.location.hash = "#";',latence); //… sur des UA obsolètes : à la fin de l'animation
+				document.location.hash = "socle"; //… sur des UA obsolètes : non en fait cf. attention ci-dessous
+					/*
+						attention à la solution document.location.hash = "#"; : sans setTimeout, effet immédiat ; avec setTimeout, perte de navigation clavier
+					*/
 			})();
 			$("html,body").animate({ scrollTop : 0 },latence,"swing",function() { //Animer le scroll
 				$("body").removeClass("enscroll");
@@ -429,7 +435,7 @@ les méthodes de l'API 'history' - et avec les styles activés.</pre>
 	var ajuster = function() {
 		if (retourner() || $("body").hasClass(".enscroll"))
 			return;
-		if ((document.location.hash.length > 0 && ! document.location.hash.match(/socle/)) || ($(":target").length > 0 && ! $(":target").attr("id").match(/socle/))) //Au chargement : target à retard
+		if ((document.location.hash.length > 0 && ! document.location.hash.match(/socle/)) || ($(":target").length > 0 && ! $(":target").attr("id").match(/socle/)))
 			$("html").removeClass("sansancre");
 		else
 			$("html").addClass("sansancre");
