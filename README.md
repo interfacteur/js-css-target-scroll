@@ -16,4 +16,4 @@ Les pages suivantes comme cas qui présentent moins d'intérêt :
 * avec scroll paramétrable entre tous les éléments (via animate()) en accompagnant le formatage de :target - mais ne permet pas l'utilisation du clavier ni des boutons "précédent"-"suivant" du navigateur : target-scroll-anime-mil.html
 
 
-Voir aussi http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
+Voir  http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
