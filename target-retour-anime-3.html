@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr" class="sansjs">
+
+<head>
+<meta charset="UTF-8">
+<title>La pseudo-classe ':target‘ : après 'replaceState()' et 'animate()' de jQuery, tests simples \ Oyat / Equatorium</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Gaëtan Langhade, interfacteur">
+
+<script>
+document.getElementsByTagName("html")[0].className = "";
+document.createElement("header");
+document.createElement("section");
+document.createElement("nav");
+document.createElement("footer");
+</script>
+
+<style>
+*	{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+body:before	{
+	content: "\8";
+	display: block;
+	height: 0;
+	text-indent: -4444px;
+}
+html, body, header, section, nav, footer, h1, p	{
+	margin: 0;
+	padding: 0;
+}
+header, section, nav, footer	{
+	display: block;
+}
+html	{
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	font-family: sans-serif;
+	height: 100%;
+}
+body	{
+	background: #FFF;
+	color: #000;
+	line-height: 1;
+	min-height: 100%;
+	padding-bottom: 20em;
+}
+a	{
+	color: #008;
+}
+a:focus	{
+	outline: thin dotted;
+}
+a:active, a:hover	{
+	outline: 0;
+}
+pre	{
+	display: none;
+}
+noscript,
+.sansjs pre	{
+	display: block;
+	font-size: 1.2em;
+}
+h1	{
+	font-family: Tahoma, Geneva, sans-serif;
+	margin: 1em;
+}
+h1 a	{
+	font-size: .5em;
+}
+section h1	{
+	margin: 0 0 1em 0;
+}
+section	{
+	background: -webkit-radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	background: -moz-radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	background: -ms-radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	background: -o-radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	background: radial-gradient(circle, #FFF, #FFF 31px, #DDE 31px, #DDE 33px, #FFF 33px);
+	border: 1px solid #000;
+	border-top: 0;
+	-webkit-border-radius: 0 0 25% 25% / 0 0 20% 20%;
+	-moz-border-radius: 0 0 25% 25% / 0 0 20% 20%;
+	-o-border-radius: 0 0 25% 25% / 0 0 20% 20%;
+	border-radius: 0 0 25% 25% / 0 0 20% 20%;
+	min-height: 10em;
+	margin: 2em 1em;
+	padding: 0 1em 3em 1em;
+}
+@media only screen and (min-width: 72em)	{
+	section	{
+		background: -webkit-radial-gradient(circle, rgba(221,221,238,.5), rgba(221,221,238,.5) 64px, #FFF 64px);
+		background: -moz-radial-gradient(circle, rgba(221,221,238,.5), rgba(221,221,238,.5) 64px, #FFF 64px);
+		background: -ms-radial-gradient(circle, rgba(221,221,238,.5), rgba(221,221,238,.5) 64px, #FFF 64px);
+		background: -o-radial-gradient(circle, rgba(221,221,238,.5), rgba(221,221,238,.5) 64px, #FFF 64px);
+		background: radial-gradient(circle, rgba(221,221,238,.5), rgba(221,221,238,.5) 64px, #FFF 64px);
+	}
+}
+section:after	{
+	clear: both;
+	content: " ";
+	display: block;
+}
+ul	{
+	margin-left: 0;
+	padding-left: 0;
+	text-align: center;
+}
+li	{
+	display: inline-block;
+	padding: 0 .66em;
+}
+p	{
+	float: left;
+	line-height: 1.5;
+	margin-top: .75em;
+	max-width: 28em;
+}
+p img	{
+	background: #DDE;
+	-webkit-border-radius: 0 0 .75em 0 / 0 0 1em 0;
+	-moz-border-radius: 0 0 .75em 0 / 0 0 1em 0;
+	-o-border-radius: 0 0 .75em 0 / 0 0 1em 0;
+	border-radius: 0 0 .75em 0 / 0 0 1em 0;
+	display: inline-block;
+	float: left;
+	height: 4em;
+	margin: 0 1em .1em 0;
+	width: 3em;
+}
+p + p img	{
+	-webkit-border-radius: 0 0 0 .75em / 0 0 0 1em;
+	-moz-border-radius: 0 0 0 .75em / 0 0 0 1em;
+	-o-border-radius: 0 0 0 .75em / 0 0 0 1em;
+	border-radius: 0 0 0 .75em / 0 0 0 1em;
+	float: right;
+	margin: 0 0 .1em 1em;
+}
+nav + p	{
+	margin-bottom: 3em;
+}
+p + p	{
+	float: right;
+}
+@media only screen and (min-width: 38em)	{
+	nav + p	{
+		margin: .75em 4em 0 0;
+	}
+}
+
+:target	{
+	background: #963;
+	color: #DEF;
+}
+:target a/*,
+h1:focus a*/	{
+	display: none;
+}
+h1:focus	{
+	outline: 0;
+}
+[id^="contenu"]:hover:after,
+[id^="contenu"]:focus:after,
+[id^="contenu"]:target:after	{
+	color: #778;
+	content: "\000009\000009#" attr(id);
+	font-size: .75em;
+	font-style: italic;
+	font-weight: normal;
+	letter-spacing: 2px;
+	white-space: pre;
+}
+[id^="contenu"]:target:after	{
+	color: #DEF;
+	font-size: .5em;
+}
+#socle,
+.sansjs #socle	{
+	left: -4444em;
+	position: absolute;
+	top: 0;
+	z-index: -1;
+}
+#socle	{
+	position: fixed;
+}
+
+footer	{
+	bottom: 0;
+	position: fixed;
+	text-align: center;
+	width: 100%;
+
+	-webkit-transition: .3s;
+	-moz-transition: .3s;
+	-o-transition: .3s;
+	transition: .3s;
+}
+footer > a	{
+	background: #445;
+	color: #FF0;
+	display: inline-block;
+	padding: .5em 1em;
+}
+.footer	{
+	background: rgba(255,127,0,.5);
+	bottom: 0;
+	font-size: .85em;
+	line-height: 1.6;
+	position: fixed;
+	right: .5em;
+	text-align: left;
+}
+.footer h1,
+.footer a	{
+	color: black;
+	font-size: 1em;
+	margin: 0;
+}
+</style>
+</head>
+
+<body tabindex="-1">
+<a tabindex="-1" id="socle">Début de page</a>
+<noscript>Cette page est conçue pour fonctionner avec JavaScript.</noscript>
+<pre>Cette page est conçue pour tout navigateur supportant la pseudo-classe ':target',
+les méthodes de l'API 'history' - et avec les styles activés.</pre>
+<header>
+	<h1 title=":target, replaceState et .animate({ scrollTop : 0 })">Titre</h1>
+</header>
+<section>
+	<h1 id="contenu1" tabindex="0"><a href="#contenu1" title="Texte 1">#</a>Texte 1</h1>
+	<nav>
+		<ul>
+			<li><a href="#contenu2">Texte 2</a></li>
+			<li><a href="#contenu3">Texte 3</a></li>
+			<li><a href="#contenu4">Texte 4</a></li>
+			<li><a href="#socle" class="versSocle" title="Début de page">&#x02191; Top</a></li>
+		</ul>
+	</nav>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</section>
+<section>
+	<h1 id="contenu2" tabindex="0"><a href="#contenu2" title="Texte 2">#</a>Texte 2</h1>
+	<nav>
+		<ul>
+			<li><a href="#contenu1">Texte 1</a></li>
+			<li><a href="#contenu3">Texte 3</a></li>
+			<li><a href="#contenu4">Texte 4</a></li>
+			<li><a href="#socle" class="versSocle" title="Début de page">&#x02191; Top</a></li>
+		</ul>
+	</nav>
+	<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBMDlFODQyNDdDNjMxMUUzQjI5MEJFQzY2NTk4MDMxNSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBMDlFODQyMzdDNjMxMUUzQjI5MEJFQzY2NTk4MDMxNSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuZbPHYAAAAQSURBVHjaYv7//78UQIABAAklAxumfPoeAAAAAElFTkSuQmCC" alt="">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</section>
+<section>
+	<h1 id="contenu3" tabindex="0"><a href="#contenu3" title="Texte 3">#</a>Texte 3</h1>
+	<nav>
+		<ul>
+			<li><a href="#contenu1">Texte 1</a></li>
+			<li><a href="#contenu2">Texte 2</a></li>
+			<li><a href="#contenu4">Texte 4</a></li>
+			<li><a href="#socle" class="versSocle" title="Début de page">&#x02191; Top</a></li>
+		</ul>
+	</nav>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBMDlFODQyNDdDNjMxMUUzQjI5MEJFQzY2NTk4MDMxNSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBMDlFODQyMzdDNjMxMUUzQjI5MEJFQzY2NTk4MDMxNSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuZbPHYAAAAQSURBVHjaYv7//78UQIABAAklAxumfPoeAAAAAElFTkSuQmCC" alt="">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</section>
+<section>
+	<h1 id="contenu4" tabindex="0"><a href="#contenu4" title="Texte 4">#</a>Texte 4</h1>
+	<nav>
+		<ul>
+			<li><a href="#contenu1">Texte 1</a></li>
+			<li><a href="#contenu2">Texte 2</a></li>
+			<li><a href="#contenu3">Texte 3</a></li>
+			<li><a href="#socle" class="versSocle" title="Début de page">&#x02191; Top</a></li>
+		</ul>
+	</nav>
+	<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBMDlFODQyNDdDNjMxMUUzQjI5MEJFQzY2NTk4MDMxNSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBMDlFODQyMzdDNjMxMUUzQjI5MEJFQzY2NTk4MDMxNSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuZbPHYAAAAQSURBVHjaYv7//78UQIABAAklAxumfPoeAAAAAElFTkSuQmCC" alt="">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBMDlFODQyNDdDNjMxMUUzQjI5MEJFQzY2NTk4MDMxNSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBMDlFODQyMzdDNjMxMUUzQjI5MEJFQzY2NTk4MDMxNSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCNEIzM0Y2NzYzN0NFMzExODI0OEI5NTgwNEE1MkEzMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuZbPHYAAAAQSURBVHjaYv7//78UQIABAAklAxumfPoeAAAAAElFTkSuQmCC" alt="">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</section>
+<footer>
+	<a href="#socle">Début de page &#x02191;</a>
+	<div class="footer">
+		<h1>La pseudo-classe ':target‘ :<br>après 'replaceState()' et 'animate()'<br>de jQuery, tests simples</h1>
+		<a href="http://interfacteur.blogspot.com/2014/07/target-css3-et-js.html">Blogspot / :target : concilier la pseudo-classe<br>avec l'API history, avec un scroll animé, avec IE 8</a>
+		<address>
+			<a href="http://gaetan.langhade.net">Interfacteur, 2014</a>
+		</address>
+	</div>
+</footer>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+;(function() {
+	"use strict";
+
+/* Interfacteur : code développé d'où optimisable via variables d'objets, factorisation */
+
+	var targetant = (function() { //Détection du support de la pseudo-classe ':target' - réf. http://www.zachleat.com/test/css-target-feature-test/querySelector.html
+		if (Object.prototype.toString.call(window.operamini) !== "[object OperaMini]" && "querySelectorAll" in document) {
+			try {
+				document.querySelectorAll(":target");
+				return true;
+			} catch(e){}
+		}
+		return false;
+	})();
+	var api = "history" in window && "replaceState" in history ? true : false;
+	(! targetant || ! api) && $("pre").css("display", "block");
+	if (! targetant)
+		return;
+
+	$("footer a").add(".versSocle").on({
+		click: function(ze) {
+			ze.preventDefault();
+			var latence = Math.ceil($(window).height() / (8 * $(window).scrollTop())) * $(window).height() / 4; //Durée de l'animation pondérée par le niveau de scroll
+			$("body").focus(); //Modes de navigation extra-visuels
+			$(":target").length == 1 && (! $(":target").attr("id").match(/socle/)) && (function() { //Re-écrire l'url le cas échéant…
+				if (api) { //… avec l'API history : immédiatement
+					document.location.hash = "socle"; //Le remplacement du :target par un autre qui n'ait aucun effet visuel - ni scroll ni CSS
+					return history.replaceState("", document.title, window.location.pathname); //La clarification de l'url sans création de nouvel état dans 'history'
+				}
+				setTimeout('document.location.hash = "#";',latence); //… sur des UA obsolètes : à la fin de l'animation
+			})();
+			$("html,body").animate({ scrollTop : 0 },latence,"swing"); //Animer le scroll
+	}	});
+
+	api
+		&& $(":target").length == 0
+		&& document.location.href.match(/#/)
+		&& document.location.hash.length == 0
+		&& history.replaceState("", document.title, window.location.pathname);
+})();
+</script>
+</body>
+</html>
