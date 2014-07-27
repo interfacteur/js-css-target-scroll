@@ -1,5 +1,5 @@
-js-css-target-scroll
-====================
+target-css-js
+=============
 
 Gérer le ciblage par la pseudo-classe ":target" :
 
