@@ -9,7 +9,7 @@ Concilier la pseudo-classe ':target' avec l'API 'history', avec un scroll animé
 * avec scroll paramétrable entre tous les éléments via animate() : target-scroll-anime-avt.html
 * sur IE 8 : target-alternative.html
 
-Les pages suivantes comme cas présenant moins d'intérêt immédiat : 
+Les pages suivantes comme cas présentant moins d'intérêt : 
 
 * sans aucun sroll : target-scroll-aucun.html
 * avec scroll paramétrable entre tous les éléments (via animate()) en précédant le formatage de :target - mais ne permet pas l'utilisation du clavier ni des boutons "précédent"-"suivant" du navigateur : target-scroll-anime-apr.html
