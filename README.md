@@ -6,14 +6,14 @@ Concilier la pseudo-classe ':target' avec l'API 'history', avec un scroll animé
 * avec un scroll paramétrable de retour en haut de page - via l'API history et la fonction animate() de jQuery : target-retour-anime-1.html
 * idem pour cas complets : target-retour-anime-2.html
 * idem pour cas simples : target-retour-anime-3.html
-* avec un scroll paramétrable entre tous les éléments (via animate()) en suivant le formatage de :target : target-scroll-anime-mil.html
+* avec scroll paramétrable entre tous les éléments via animate() : target-scroll-anime-mil.html
 * sur IE 8 : target-alternative.html
 
 Les pages suivantes comme cas présenant moins d'intérêt immédiat : 
 
 * sans aucun sroll : target-scroll-aucun.html
-* avec un scroll paramétrable entre tous les éléments (via animate()) en précédant le formatage de :target (mais ne permet pas l'utilisation du clavier ni des boutons "précédent"-"suivant" du navigateur) : target-scroll-anime-apr.html
-* avec un scroll paramétrable entre tous les éléments (via animate()) en accompagnant le formatage de :target (mais ne permet pas l'utilisation du clavier ni des boutons "précédent"-"suivant" du navigateur) : target-scroll-anime-mil.html
+* avec scroll paramétrable entre tous les éléments (via animate()) en précédant le formatage de :target - mais ne permet pas l'utilisation du clavier ni des boutons "précédent"-"suivant" du navigateur : target-scroll-anime-apr.html
+* avec scroll paramétrable entre tous les éléments (via animate()) en accompagnant le formatage de :target - mais ne permet pas l'utilisation du clavier ni des boutons "précédent"-"suivant" du navigateur : target-scroll-anime-mil.html
 
 
 Voir aussi http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
