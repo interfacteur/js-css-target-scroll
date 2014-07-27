@@ -1,7 +1,7 @@
-La pseudo-classe ':target'
+Rafraîchir la pseudo-classe ':target'
 =============
 
-Concilier la pseudo-classe ':target' avec l'API 'history', avec un scroll animé, avec IE 8
+:target : pseudo-classe à concilier avec pushState(), et IE 8
 
 * avec un scroll paramétrable de retour en haut de page - via l'API history et la fonction animate() de jQuery : target-retour-anime-1.html
 * idem cas complets : target-retour-anime-2.html
