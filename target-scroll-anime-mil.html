@@ -184,11 +184,22 @@ footer a	{
 	margin: 0;
 }
 
+body > h1	{
+	background: #F00;
+	color: #FFF;
+	left: 0;
+	position: fixed;
+	text-align: center;
+	top: 50%;
+	width: 100%;
+}
 </style>
 
 </head>
 
 <body>
+
+<h1>N'est pas fonctionnel pour une navigation au clavier, ou boutons "précédent" / "suivant" </h1>
 
 <header>
 	<nav>
@@ -249,6 +260,8 @@ footer a	{
 ;(function() {
 	"use strict";
 
+//N'est pas fonctionnel pour une navigation au clavier, ou boutons "précédent" / "suivant"
+
 	//Gestion du support de la pseudo-classe ':target' pour IE 8
 	(function() { /* 1406473925271 */
 		if (Object.prototype.toString.call(window.operamini) !== "[object OperaMini]" && "querySelectorAll" in document) {
@@ -282,6 +295,7 @@ footer a	{
 				repere = $w.height(),
 				niveaux = [$w.scrollTop(),cible.offset().top],
 				latence = Math.ceil(repere / (8 * Math.abs(niveaux[0] - niveaux[1]))) * repere / 4;
+//N'est pas fonctionnel pour une navigation au clavier, ou boutons "précédent" / "suivant"
 			setTimeout(function() {
 				cible.addClass("transitoire");
 				double.insertAfter(cible);
