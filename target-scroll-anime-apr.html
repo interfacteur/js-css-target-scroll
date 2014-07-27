@@ -143,13 +143,6 @@ ol li.target:after	{
 	border-left-color: rgba(255,127,0,.33);
 }
 
-.transitoire	{ /* pas de margin sup pour GC Mac */
-	left: -4444em;
-	position: fixed;
-	top: 0;
-	z-index: -1;
-}
-
 header	{
 	min-width: 40em;
 	position: fixed;
@@ -279,16 +272,11 @@ footer a	{
 			ze.preventDefault();
 			var ancre = $(this).attr("href").match(/(#.*)|(^[^#]*$)/)[0].replace("#",""), //du genre 'href' équivalent à location.href sur IE obsolètes ?
 				cible = $("#" + ancre),
-				double = cible.clone(),
 				$w = $(window),
 				repere = $w.height(),
 				niveaux = [$w.scrollTop(),cible.offset().top];
 			$("html,body").animate({ scrollTop : niveaux[1] },Math.ceil(repere / (8 * Math.abs(niveaux[0] - niveaux[1]))) * repere / 4,"swing",function() {
-				cible.addClass("transitoire");
-				double.insertAfter(cible);
 				document.location.hash = ancre;
-				double.remove();
-				cible.removeClass("transitoire");
 	});	}	});
 
 })();
