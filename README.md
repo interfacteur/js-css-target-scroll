@@ -10,3 +10,4 @@ Gérer le ciblage par la pseudo-classe ":target" :
 * sans aucun sroll : target-scroll-aucun.html
 * sur IE 8 : target-alternative.html
 
+Voir aussi http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
