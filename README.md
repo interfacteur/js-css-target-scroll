@@ -9,7 +9,7 @@ Rafraîchir la pseudo-classe ':target'
 * avec scroll paramétrable entre tous les éléments via animate() : target-scroll-anime-avt.html
 * sur IE 8 : target-alternative.html
 
-Les pages suivantes comme cas qui présentent moins d'intérêt : 
+Les pages suivantes, comme cas d'intérêt limité :
 
 * sans aucun sroll : target-scroll-aucun.html
 * avec scroll paramétrable entre tous les éléments (via animate()) en précédant le formatage de :target - mais ne permet pas l'utilisation du clavier ni des boutons "précédent"-"suivant" du navigateur : target-scroll-anime-apr.html
