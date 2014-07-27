@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="sansjs">
 
 <head>
 <meta charset="UTF-8">
-<title>La pseudo-classe ':target‘ avec scroll animé et 'replaceState()' \ Dunes / Equatorium</title>
+<title>La pseudo-classe ':target‘ : après 'replaceState()' et 'animate()' de jQuery \ Oyat / Equatorium</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Gaëtan Langhade, interfacteur">
 
 <script>
+document.getElementsByTagName("html")[0].className = "";
 document.createElement("footer");
 document.createElement("address");
 </script>
@@ -33,12 +35,17 @@ body	{
 	margin: 0;
 	padding: 0;
 }
-footer,
-address	{
+footer, address,
+.sansjs p	{
 	display: block;
 }
 p	{
 	display: none;
+	font-family: monospace;
+}
+noscript,
+p	{
+	font-size: 1.2em;
 }
 div	{
 	-webkit-box-sizing: border-box;
@@ -56,8 +63,7 @@ div	{
 	text-align: center;
 	width: 66%;
 }
-a,
-strong	{
+a	{
 	background: transparent;
 	color: #EEF;
 	display: inline-block;
@@ -79,9 +85,6 @@ div a:hover	{
 }
 div:target	{
 	border: .25em solid #522;
-}
-:target strong	{
-	color: #522;
 }
 #socle,
 .sansjs #socle	{
@@ -108,8 +111,8 @@ footer a	{
 
 <body tabindex="-1">
 <a tabindex="-1" id="socle">Début de page</a>
-<noscript>Cette page est conçue pour fonctionner avec JavaScript - et un navigateur supportant les méthodes de l'API 'history'.</noscript>
-<p>Cette page est conçue pour tout navigateur supportant les méthodes de l'API 'history' - et avec les styles activés.</p>
+<noscript>Cette page est conçue pour fonctionner avec JavaScript.</noscript>
+<p>Cette page est conçue pour tout navigateur supportant la pseudo-classe ':target', les méthodes de l'API 'history' - et avec les styles activés.</p>
 <div id="contenu1">
 	<a href="#contenu2"><abbr title="Contenu 2">1 &rarr; 2</abbr></a>
 	<a href="#contenu3"><abbr title="Contenu 3">1 &rArr; 3</abbr></a>
@@ -126,41 +129,54 @@ footer a	{
 	<a href="#socle" class="debut" title="Début de page">&uArr;</a>
 </div>
 <footer>
-	<h1>La pseudo-classe ':target‘<br>avec scroll animé et 'replaceState()'</h1>
+	<h1>La pseudo-classe ':target‘ : après<br>'replaceState()' et 'animate()' de jQuery</h1>
 	<a href="http://interfacteur.blogspot.fr/">Cf. Blogspot billet<br>du 26 ou 27 juillet 2014</a>
 	<address>
 		<br>
 		<a href="http://gaetan.langhade.net">Interfacteur, 2014</a>
 	</address>
 </footer>
-<script src="-ex-target-replacestate-animate/jquery-1.11.0.min.js"></script>
+<script src="-oy-target/jquery-1.11.0.min.js"></script>
 <script>
 ;(function() {
 	"use strict";
-/* Interfacteur : code entièrement développé, optimisable via variables d'objets, factorisation */
-	var api = "history" in window && "pushState" in history && "replaceState" in history ? true : false;
-	! api && $("p").css("display", "block");
+
+/* Interfacteur : code développé d'où optimisable via variables d'objets, factorisation */
+
+	var targetant = (function() { //Détection du support de la pseudo-classe ':target' - réf. http://www.zachleat.com/test/css-target-feature-test/querySelector.html
+		if (Object.prototype.toString.call(window.operamini) !== "[object OperaMini]" && "querySelectorAll" in document) {
+			try {
+				document.querySelectorAll(":target");
+				return true;
+			} catch(e){}
+		}
+		return false;
+	})();
+	var api = "history" in window && "replaceState" in history ? true : false;
+	(! targetant || ! api) && $("p").css("display", "block");
+	if (! targetant)
+		return;
+
 	$(".debut").on({
 		click: function(ze) {
 			ze.preventDefault();
-			var latence = ($(window).height() * $(window).height()) / ($(window).scrollTop() * 3); //durée de l'animation
-			var latence = Math.ceil($(window).height() / (8 * $(window).scrollTop())) * $(window).height() / 4; //durée de l'animation
-			$("body").focus(); //pour la navigation non seulement visuelle
-			$(":target").length == 1 && (! $(":target").attr("id").match(/socle/)) && (function() { //re-écrire l'url le cas échéant…
+			var latence = Math.ceil($(window).height() / (8 * $(window).scrollTop())) * $(window).height() / 4; //Durée de l'animation pondérée par le niveau de scroll
+			$("body").focus(); //Modes de navigation extra-visuels
+			$(":target").length == 1 && (! $(":target").attr("id").match(/socle/)) && (function() { //Re-écrire l'url le cas échéant…
 				if (api) { //… avec l'API history : immédiatement
-					document.location.hash = "socle"; //le remplacement du :target par un autre qui n'ait aucun effet visuel - ni scroll ni CSS
-					return history.replaceState("", document.title, window.location.pathname); //la clarification de l'url sans création de nouvel état dans 'history'
+					document.location.hash = "socle"; //Le remplacement du :target par un autre qui n'ait aucun effet visuel - ni scroll ni CSS
+					return history.replaceState("", document.title, window.location.pathname); //La clarification de l'url sans création de nouvel état dans 'history'
 				}
 				setTimeout('document.location.hash = "#";',latence); //… sur des UA obsolètes : à la fin de l'animation
 			})();
-			$("html,body").animate({ scrollTop : 0 },latence,"swing") //animer le scroll
+			$("html,body").animate({ scrollTop : 0 },latence,"swing"); //Animer le scroll
 	}	});
+
 	api
 		&& $(":target").length == 0
 		&& document.location.href.match(/#/)
 		&& document.location.hash.length == 0
 		&& history.replaceState("", document.title, window.location.pathname);
-
 })();
 </script>
 </body>
