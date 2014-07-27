@@ -4,8 +4,8 @@ La pseudo-classe ':target'
 Concilier la pseudo-classe ':target' avec l'API 'history', avec un scroll animé, avec IE 8
 
 * avec un scroll paramétrable de retour en haut de page - via l'API history et la fonction animate() de jQuery : target-retour-anime-1.html
-* idem pour cas complets : target-retour-anime-2.html
-* idem pour cas simples : target-retour-anime-3.html
+* idem cas complets : target-retour-anime-2.html
+* idem cas simples : target-retour-anime-3.html
 * avec scroll paramétrable entre tous les éléments via animate() : target-scroll-anime-avt.html
 * sur IE 8 : target-alternative.html
 
