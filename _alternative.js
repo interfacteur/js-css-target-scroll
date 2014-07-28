@@ -1,6 +1,6 @@
 //cf. detection.js comme préliminaire
 if ("onhashchange" in window) {
-	function ciabler() {
+	var ciabler = function() {
 		var ancre = document.location.hash.match(/(#.*)|(^[^#]*$)/)[0].replace("#",""); //document.location.hash toujours standard ?
 		$(".target").removeClass("target");
 		$("[id]").each(function() {
