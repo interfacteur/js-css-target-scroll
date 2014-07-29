@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr" class="sansjs">
+
+<head>
+<meta charset="UTF-8">
+<title>La pseudo-classe ':target‘ en accord avec 'pushState()' \ Oyat / Equatorium</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Gaëtan Langhade, interfacteur">
+
+<script>
+document.getElementsByTagName("html")[0].className = "";
+document.createElement("header");
+document.createElement("footer");
+document.createElement("nav");
+document.createElement("section");
+document.createElement("address");
+</script>
+
+<style>
+/*
+	STANDARD */
+body	{
+	background: #FED;
+	color: #000;
+	line-height: 1;
+	height: 200%;
+	overflow: hidden;
+}
+*	{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+body::before	{
+	content: "\8";
+	display: block;
+	height: 0;
+	text-indent: -4444px;
+}
+body::after,
+.gauche::after	{
+	clear: both;
+	content: " ";
+	display: block;
+}
+html	{
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	font-family: sans-serif;
+	/* font-size: 10px; */
+	height: 100%;
+}
+
+/*
+	RESET (median) */
+html, body, div, iframe,
+header, nav, main, section, article, aside,
+h1, h2, h3, h4, h5, h6, p, pre,
+dl, dt, dd, ol, ul, li,
+form, fieldset, legend,
+button, input, keygen, optgroup, output, select, textarea,
+table, caption, tbody, tfoot, thead, tr, th, td,
+figure, figcaption, summary, details,
+audio, canvas, embed, math, object, svg, video,
+ruby, meter, progress	{
+	margin: 0;
+	padding: 0;
+}
+
+/*
+	NORMALIZE (reduced - for typo and form, see bottom) */
+article, aside, details, figcaption, figure, footer,
+header, main, menu, nav, section, summary	{
+	display: block;
+}
+ol, ul, li	{
+	list-style: none;
+}
+
+/*
+	TYPOGRAPHY */
+a	{
+	background: transparent;
+}
+a:focus	{
+	outline: thin dotted;
+}
+a:active, a:hover	{
+	outline: 0;
+}
+
+#debut	{
+	left: -4444px;
+	position: absolute;
+}
+
+header,
+footer	{
+	background: #963;
+	line-height: 1.5;
+	position: fixed;
+	top: 44%;
+	white-space: nowrap;
+}
+header	{
+	left: 0;
+}
+footer	{
+	right: 0;
+}
+nav a	{
+	color: #FFF;
+	padding: .15em .25em;
+}
+body > * > nav a:hover,
+body > * > nav a:focus	{
+	background: #FFF;
+	color: #963;
+}
+.gauche,
+.droite	{
+	background: #FFF;
+	float: left;
+	height: 75%;
+	width: 49%;
+}
+p	{
+	border: 2px dashed #445;
+	line-height: 4em;
+	text-align: center;
+
+	transition: .5s;
+}
+.gauche p	{
+	float: left;
+	height: 100%;
+	width: 25%;
+}
+.droite	{
+	float: right;
+}
+.droite p	{
+	height: 25%;
+}
+
+:target	{
+	background: #445;
+	border: 2px dashed #FFF;
+	color: #FFF;
+}
+/*p:focus	{
+	background: #88A;
+}
+p:target:focus	{
+	background: #000;
+}*/
+
+body > nav a	{
+	border: 0 solid transparent;
+	bottom: 0;
+	height: 0;
+	position: fixed;
+	text-indent: -4444em;
+	width: 0;
+}
+[href="#debut"]	{
+	border-width: 0 1em 1.73em 1em; /*.866 : http://css-tricks.com/snippets/css/css-triangle/*/
+	border-bottom-color: #445;
+	left: 50%;
+	margin-left: -1em;
+}
+[href*="(-1)"],
+[href*="(1)"]	{
+	margin-left: -.86em;
+}
+[href*="(-1)"]	{
+	border-width: 1em 1.73em 1em 0;
+	border-right-color: #445;
+	left: 25%;
+}
+[href*="(1)"]	{
+	border-width: 1em 0 1em 1.73em;
+	border-left-color: #445;
+	left: 75%;
+}
+
+[href="#debut"]:hover,
+[href="#debut"]:focus	{
+	border-bottom-color: #963;
+}
+[href*="(-1)"]:hover,
+[href*="(-1)"]:focus	{
+	border-right-color: #963;
+}
+[href*="(1)"]:hover,
+[href*="(1)"]:focus	{
+	border-left-color: #963;
+}
+
+address	{
+	background: rgba(255,127,0,.5);
+	top: 6em;
+	font-size: .85em;
+	left: 12em;
+	line-height: 1.6;
+	position: fixed;
+	text-align: center;
+	white-space: nowrap;
+}
+address h1,
+address a	{
+	color: black;
+	font-size: 1em;
+	margin: 0;
+}
+
+noscript	{
+	display: block;
+	font-size: 2em;
+	text-align: center;
+}
+.sansjs noscript ~ *	{
+	display: none;
+}
+.sansjs body	{
+	height: auto;
+}
+</style>
+</head>
+
+<body tabindex="-1">
+<a id="debut" tabindex="-1">Début de page</a>
+<noscript>Cette page est conçue pour des tests JavaScript sur "pushState"</noscript>
+<header>
+	<nav>
+		<ul>
+			<li><a href="#gauche1">gauche 1</a></li>
+			<li><a href="#gauche2">gauche 2</a></li>
+			<li><a href="#gauche3">gauche 3</a></li>
+			<li><a href="#gauche4">gauche 4</a></li>
+		</ul>
+	</nav>
+</header>
+<section class="gauche">
+	<p id="gauche1">#gauche1</p>
+	<p id="gauche2">#gauche2</p>
+	<p id="gauche3">#gauche3</p>
+	<p id="gauche4">#gauche4</p>
+</section>
+<section class="droite">
+	<p id="droite1">#droite1</p>
+	<p id="droite2">#droite2</p>
+	<p id="droite3">#droite3</p>
+	<p id="droite4">#droite4</p>
+</section>
+<footer>
+	<nav>
+		<ul>
+			<li><a href="#droite1">droite 1</a></li>
+			<li><a href="#droite2">droite 2</a></li>
+			<li><a href="#droite3">droite 3</a></li>
+			<li><a href="#droite4">droite 4</a></li>
+		</ul>
+	</nav>
+</footer>
+
+<nav>
+	<ul>
+		<li><a href="javascript:history.go(-1);" title="Reculer dans l'historique, càd vers la précédente consultation - si elle existe">Reculer dans l'historique, càd vers la précédente consultation - si elle existe</a></li>
+		<li><a href="#debut" title="Début de page">Début de page</a></li>
+		<li><a href="javascript:history.go(1);" title="Avancer dans l'historique, càd vers la consultation suivante - si elle existe">Avancer dans l'historique, càd vers la consultation suivante - si elle existe</a></li>
+	</ul>
+</nav>
+
+<address>
+	<strong>La pseudo-classe ':target‘ accordé à "pushState()"</strong>
+	<br>
+	<a href="http://gaetan.langhade.net">Interfacteur, 2014</a>
+</address>
+
+<script src="-oy-target/jquery-1.11.0.min.js"></script>
+
+<script>
+;(function() {
+
+	"use strict";
+
+	if (! "history" in window  || ! "replaceState" in history)
+		return $("body").text('Le navigateur est trop obsolète pour les tests JavaScript sur "pushState"').css({ "font-size" : "2em", "text-align" : "center" });
+
+	Date.now = Date.now || function() {
+		return new Date().getTime();
+	};
+
+
+	//TO DO : tester la nécessité du setTimeout et calculer son paramètre temps minimum
+
+	//TO DO : distinguer go(-1) et go(1) de façon intrinsèque sinon via le déclencheur
+		//et refaire du scroll animé…
+
+	// $("p").attr("tabindex",1);
+
+
+	var $w = $(window),
+		$b = $("body");
+
+	$("header a").on({
+		click: function(ze) {
+			ze.preventDefault();
+			var $t = $(this);
+			history.pushState({ instant : Date.now() },document.title,window.location.pathname.replace(/(.*\/)+/,"") + $t.attr("href"));
+			setTimeout(function() {
+				history.go(-1);
+				setTimeout(function() {
+					history.go(1);
+					$t.focus(); //à ne pas faire en temps normal où il faut donner le focus à la cible
+				},44);
+			},44);
+			return
+			history.go(-1); //FF Mac OK
+			history.go(1); //FF Mac OK
+			$t.focus(); //à ne pas faire en temps normal où il faut donner le focus à la cible
+	}	});
+
+	$("footer a").on({
+		click: function(ze) {
+			ze.preventDefault();
+			var $t = $(this),
+				ancre = $(this).attr("href"),
+				cible = $(ancre),
+				repere = $w.height(),
+				niveaux = [$w.scrollTop(),cible.offset().top];
+			history.pushState({ instant : Date.now() },document.title,window.location.pathname.replace(/(.*\/)+/,"") + ancre);
+			setTimeout(function() {
+				history.go(-1);
+				setTimeout(function() {
+					history.go(1);
+					$t.focus(); //à ne pas faire en temps normal où il faut donner le focus à la cible
+					$("html,body").animate( { scrollTop: cible.offset().top },Math.ceil(repere / (8 * Math.abs(niveaux[0] - niveaux[1]))) * repere / 4,"swing");
+				},44);
+			},44);
+			return;
+			history.go(-1); //FF Mac OK mais pas GC
+			history.go(1); //FF Mac OK mais pas GC
+			$t.focus(); //à ne pas faire en temps normal où il faut donner le focus à la cible
+			$("html,body").animate( { scrollTop: cible.offset().top },Math.ceil(repere / (8 * Math.abs(niveaux[0] - niveaux[1]))) * repere / 4,"swing");
+	}	});
+
+	$("[href='#debut']").on({
+		click: function (ze) {
+			ze.preventDefault();
+			var repere = $w.height();
+			history.pushState({ instant : Date.now() },document.title,window.location.pathname.replace(/(.*\/)+/,""));
+			setTimeout(function() {
+				history.go(-1);
+				setTimeout(function() {
+					history.go(1);
+					$b.focus();
+					$("html,body").animate( { scrollTop: 0 },Math.ceil(repere / (8 * $(window).scrollTop())) * repere / 4,"swing");
+				},44);
+			},44);
+			return;
+			history.go(-1); //FF Mac OK mais pas GC
+			history.go(1); //FF Mac OK mais pas GC
+			$b.focus();
+			$("html,body").animate( { scrollTop: 0 },Math.ceil(repere / (8 * $(window).scrollTop())) * repere / 4,"swing");
+	}	});
+
+})();
+</script>
+</body>
+</html>
