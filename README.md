@@ -1,6 +1,10 @@
 Rafraîchir la pseudo-classe ':target'
 =============
 
+:target : pseudo-classe conciliée avec pushState() et autres méthodes de l'API "history"
+
+* target-avec-pushstate.html : scroll facultatif et paramétrable entre éléments, retour en début de page, nécessite le support de "pushState()"
+
 :target : pseudo-classe à concilier avec pushState(), et IE 8
 
 * avec un scroll paramétrable de retour en haut de page - via l'API history et la fonction animate() de jQuery : target-retour-anime-1.html
