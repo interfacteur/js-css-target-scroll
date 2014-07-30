@@ -1,9 +1,16 @@
 Rafraîchir la pseudo-classe ':target'
 =============
 
-:target : pseudo-classe conciliée avec pushState() et autres méthodes de l'API "history"
+Voir informations détaillées sur
+http://interfacteur.blogspot.fr/2014/07/target-update-pushstate.html
+http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
 
-* target-avec-pushstate.html : scroll facultatif et paramétrable entre éléments, retour en début de page, nécessite le support de "pushState()"
+:target : pseudo-classe rafraîchie avec avec pushState() et autres méthodes de l'API "history
+    (scroll facultatif, paramétrable, entre éléments ou retour en début de page)
+    
+* target-pushstate-1-st.html : pour navigateurs standards, méthode du double pushState
+* target-pushstate-2-ie.html : pour Internet Explorer, méthode du focus
+* target-avec-pushstate.html : pour navigateurs standards, méthode du double go
 
 :target : pseudo-classe à concilier avec pushState(), et IE 8
 
@@ -19,5 +26,3 @@ Les pages suivantes, comme cas d'intérêt limité :
 * avec scroll paramétrable entre tous les éléments (via animate()) en précédant le formatage de :target - mais ne permet pas l'utilisation du clavier ni des boutons "précédent"-"suivant" du navigateur : target-scroll-anime-apr.html
 * avec scroll paramétrable entre tous les éléments (via animate()) en accompagnant le formatage de :target - mais ne permet pas l'utilisation du clavier ni des boutons "précédent"-"suivant" du navigateur : target-scroll-anime-mil.html
 
-
-Voir  http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
