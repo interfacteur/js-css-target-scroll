@@ -2,7 +2,7 @@ Rafraîchir la pseudo-classe ':target'
 =============
 
 Voir informations détaillées sur    
-http://interfacteur.blogspot.fr/2014/07/target-update-pushstate.html    http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
+http://interfacteur.blogspot.fr/2014/07/target-update-pushstate.html             http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
 
 *:target : pseudo-classe rafraîchie avec avec pushState() et autres méthodes de l'API "history :*
 
