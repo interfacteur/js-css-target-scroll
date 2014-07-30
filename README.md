@@ -15,6 +15,8 @@ http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
 
 *:target : pseudo-classe à concilier avec pushState(), et IE 8 :*
 
+    méthodes à base de position: fixed
+
 * avec un scroll paramétrable de retour en haut de page - via l'API history et la fonction animate() de jQuery : target-retour-anime-1.html
 * idem cas complets : target-retour-anime-2.html
 * idem cas simples : target-retour-anime-3.html
