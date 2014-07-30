@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="fr" class="sansjs">
+
+<head>
+<meta charset="UTF-8">
+<title>La pseudo-classe ':target‘ rafraîchie avec 'pushState()', navigateur standard \ Oyat / Equatorium</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Gaëtan Langhade, interfacteur">
+
+<script>
+document.getElementsByTagName("html")[0].className = "";
+document.createElement("header");
+document.createElement("footer");
+document.createElement("nav");
+document.createElement("section");
+document.createElement("address");
+</script>
+
+<style>
+/*
+	STANDARD */
+body	{
+	background: #FAF7F5;
+	background: rgba(153,102,51,.05);
+	color: #002;
+	font-family: "Palatino Linotype", Palatino, Georgia, serif;
+	height: 200%;
+	line-height: 1;
+	overflow: hidden;
+}
+*	{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+body::before	{
+	content: "\8";
+	display: block;
+	height: 0;
+	text-indent: -4444px;
+}
+body::after,
+.gauche::after	{
+	clear: both;
+	content: " ";
+	display: block;
+}
+html	{
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	background: #FFF;
+	font-family: sans-serif;
+	/* font-size: 10px; */
+	height: 100%;
+}
+
+/*
+	RESET (median) */
+html, body, div, iframe,
+header, nav, main, section, article, aside,
+h1, h2, h3, h4, h5, h6, p, pre,
+dl, dt, dd, ol, ul, li,
+form, fieldset, legend,
+button, input, keygen, optgroup, output, select, textarea,
+table, caption, tbody, tfoot, thead, tr, th, td,
+figure, figcaption, summary, details,
+audio, canvas, embed, math, object, svg, video,
+ruby, meter, progress	{
+	margin: 0;
+	padding: 0;
+}
+
+/*
+	NORMALIZE (reduced - for typo and form, see bottom) */
+article, aside, details, figcaption, figure, footer,
+header, main, menu, nav, section, summary	{
+	display: block;
+}
+ol, ul, li	{
+	list-style: none;
+}
+
+/*
+	TYPOGRAPHY */
+a	{
+	background: transparent;
+}
+:focus	{
+	outline: 0;
+}
+a:active, a:hover	{
+	outline: 0;
+}
+
+#debut	{
+	left: -4444px;
+	position: absolute;
+}
+
+header,
+footer	{
+	background: #963;
+	line-height: 1.5;
+	position: fixed;
+	top: 40%;
+	white-space: nowrap;
+}
+header	{
+	left: 0;
+}
+footer	{
+	right: 0;
+}
+body > * > nav a	{
+	color: #FFF;
+	padding: .15em .25em;
+}
+body > * > nav a:hover,
+body > * > nav a:focus	{
+	background: #FFF;
+	color: #963;
+}
+.gauche,
+.droite	{
+	background: #FFF;
+	float: left;
+	height: 75%;
+	width: 49%;
+}
+p	{
+	border: 2px dashed #445;
+	line-height: 4em;
+	text-align: center;
+	-webkit-transition: .5s;
+	-moz-transition: .5s;
+	-o-transition: .5s;
+	transition: .5s;
+}
+.gauche p	{
+	float: left;
+	height: 100%;
+	width: 25%;
+}
+.gauche p + p	{
+	border-left: 0;
+}
+.droite	{
+	float: right;
+}
+.droite p	{
+	height: 25%;
+}
+.droite p + p	{
+	border-top: 0;
+}
+
+:target	{
+	background: #002;
+	border: 1px dashed #FFF;
+	color: #FFF;
+}
+
+body > nav a	{
+	background: #002;
+	background: -webkit-radial-gradient(#B85, #002);
+	background: -moz-radial-gradient(#B85, #002);
+	background: -ms-radial-gradient(#B85, #002);
+	background: -o-radial-gradient(#B85, #002);
+	background: radial-gradient(#B85, #002);
+	border: 0 solid transparent;
+	bottom: 0;
+	height: 0;
+	padding: .2em;
+	position: fixed;
+	text-indent: -4444em;
+	width: 0;
+}
+body > nav a:hover,
+body > nav a:focus	{
+	background: -webkit-radial-gradient(#002, #B85);
+	background: -moz-radial-gradient(#002, #B85);
+	background: -ms-radial-gradient(#002, #B85);
+	background: -o-radial-gradient(#002, #B85);
+	background: radial-gradient(#002, #B85);
+}
+[href="#debut"]	{
+	border-width: 0 1em 1.73em 1em; /*.866 : http://css-tricks.com/snippets/css/css-triangle/*/
+	border-bottom-color: #FFF;
+	bottom: 1em;
+	-webkit-border-radius: .75em .75em 0 0 / 1em 1em 0 0;
+	-moz-border-radius: .75em .75em 0 0 / 1em 1em 0 0;
+	border-radius: .75em .75em 0 0 / 1em 1em 0 0;
+	-webkit-box-shadow: 0 1px #963;
+	-moz-box-shadow: 0 1px #963;
+	box-shadow: 0 1px #963;
+	left: 50%;
+	margin-left: -1.2em;
+}
+[href*="(-1)"],
+[href*="(1)"]	{
+	margin-left: -.86em;
+}
+[href*="(-1)"]	{
+	border-width: 1em 1.73em 1em 0;
+	border-right-color: #FFF;
+	-webkit-border-radius: 1em 0 0 1em / .75em 0 0 .75em;
+	-moz-border-radius: 1em 0 0 1em / .75em 0 0 .75em;
+	border-radius: 1em 0 0 1em / .75em 0 0 .75em;
+	-webkit-box-shadow: 1px 0 #963;
+	-moz-box-shadow: 1px 0 #963;
+	box-shadow: 1px 0 #963;
+	left: 25%;
+}
+[href*="(1)"]	{
+	border-width: 1em 0 1em 1.73em;
+	border-left-color: #FFF;
+	-webkit-border-radius: 0 1em 1em 0 / 0 .75em .75em 0;
+	-moz-border-radius: 0 1em 1em 0 / 0 .75em .75em 0;
+	border-radius: 0 1em 1em 0 / 0 .75em .75em 0;
+	-webkit-box-shadow: -1px 0 #963;
+	-moz-box-shadow: -1px 0 #963;
+	box-shadow: -1px 0 #963;
+	left: 75%;
+}
+[href="#debut"]:hover,
+[href="#debut"]:focus	{
+	border-bottom-color: #963;
+	-webkit-box-shadow: 0 2px #002;
+	-moz-box-shadow: 0 2px #002;
+	box-shadow: 0 2px #002;
+}
+[href*="(-1)"]:hover,
+[href*="(-1)"]:focus	{
+	border-right-color: #963;
+	-webkit-box-shadow: 2px 0 #002;
+	-moz-box-shadow: 2px 0 #002;
+	box-shadow: 2px 0 #002;
+}
+[href*="(1)"]:hover,
+[href*="(1)"]:focus	{
+	border-left-color: #963;
+	-webkit-box-shadow: -2px 0 #002;
+	-moz-box-shadow: -2px 0 #002;
+	box-shadow: -2px 0 #002;
+}
+
+address	{
+	background: rgba(153,102,51,.5);
+	color: #FFF;
+	font-size: .85em;
+	left: 12em;
+	line-height: 1.6;
+	position: fixed;
+	text-align: center;
+	top: 6em;
+	white-space: nowrap;
+}
+address strong,
+address a	{
+	background: rgba(153,102,51,.5);
+	color: #FFF;
+	font-size: 1em;
+	margin: 0;
+}
+
+noscript	{
+	display: block;
+	font-size: 2em;
+	text-align: center;
+}
+.sansjs noscript ~ *	{
+	display: none;
+}
+.sansjs body	{
+	height: auto;
+}
+</style>
+</head>
+
+<body tabindex="-1">
+<a id="debut" tabindex="-1">Début de page</a>
+<noscript>Cette page est conçue pour rendre compatible la pseudo-classe ':target' avec la fonction JavaScript "pushState()", en version standard.</noscript>
+<header>
+	<nav>
+		<ul>
+			<li><a href="#gauche1">:gauche 1</a></li>
+			<li><a href="#gauche2">:gauche 2</a></li>
+			<li><a href="#gauche3">:gauche 3</a></li>
+			<li><a href="#gauche4">:gauche 4</a></li>
+		</ul>
+	</nav>
+</header>
+<section class="gauche">
+	<p id="gauche1">#gauche1</p>
+	<p id="gauche2">#gauche2</p>
+	<p id="gauche3">#gauche3</p>
+	<p id="gauche4">#gauche4</p>
+</section>
+<section class="droite">
+	<p id="droite1">#droite1</p>
+	<p id="droite2">#droite2</p>
+	<p id="droite3">#droite3</p>
+	<p id="droite4">#droite4</p>
+</section>
+<footer>
+	<nav>
+		<ul>
+			<li><a href="#droite1">:droite 1</a></li>
+			<li><a href="#droite2">:droite 2</a></li>
+			<li><a href="#droite3">:droite 3</a></li>
+			<li><a href="#droite4">:droite 4</a></li>
+		</ul>
+	</nav>
+</footer>
+
+<nav>
+	<ul>
+		<li><a href="javascript:history.go(-1); void(window.gauche.focus());" title="Reculer dans l'historique, càd vers la précédente consultation si elle existe">Reculer dans l'historique, càd vers la précédente consultation si elle existe</a></li>
+		<li><a href="#debut" title="Début de page">Début de page</a></li>
+		<li><a href="javascript:history.go(1); void(window.droite.focus());" title="Avancer dans l'historique, càd vers la consultation suivante si elle existe">Avancer dans l'historique, càd vers la consultation suivante si elle existe</a></li>
+	</ul>
+</nav>
+
+<address>
+	<strong>':target‘ rafraîchie avec "pushState()", navigateur standard</strong>
+	<br>
+	<a href="http://interfacteur.blogspot.fr/2014/07/target-update-pushstate.html">cf. Blogspot ~ :target : pseudo-classe rafraîchie avec pushState()</a>
+	<br>
+	<a href="oy-target-pushstate-2-ie.html">idem pour Internet Exlorer</a>&#x20;;&#x20;<a href="http://gaetan.langhade.net">Interfacteur, 2014</a>
+</address>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<script>
+;(function() {
+
+	"use strict";
+
+	if (! "history" in window  || ! "pushState" in history  || ! "replaceState" in history)
+		return $("body").text('Le navigateur est trop obsolète pour ces fonctionnalités JavaScript').css({ "font-size" : "2em", "text-align" : "center" });
+
+	var $w = $(window),
+		$b = $("body");
+
+	window.gauche = $('[href*="(-1)"]');
+	window.droite = $('[href*="(1)"]');
+
+	$("header a").on({
+		click: function(ze) {
+			ze.preventDefault();
+			var $t = $(this),
+				ancre = $t.attr("href"),
+				title = document.title,
+				adresse = window.location.pathname.replace(/(.*(\\|\/))+/,"");
+			history.pushState({ ancre : ancre },title, adresse + ancre);
+			//START solution pour le rafraîchissement du :target :
+			history.pushState({ ancre : ancre },title,adresse);
+			history.go(-1);
+			//END solution
+			$t.focus(); //à ne pas faire en temps normal où il faut donner le focus à la cible
+				//mais ici pour l'ergonomie de mon interface
+	}	});
+
+	$("footer a").on({
+		click: function(ze) {
+			ze.preventDefault();
+			var $t = $(this),
+				ancre = $t.attr("href"),
+				title = document.title,
+				adresse = window.location.pathname.replace(/(.*(\\|\/))+/,""),
+				cible = $(ancre),
+				repere = $w.height(),
+				niveaux = [$w.scrollTop(),cible.offset().top];
+			history.pushState({ ancre : ancre },title,adresse + ancre);
+			//START solution pour le rafraîchissement du :target :
+			history.pushState({ ancre : ancre },title,adresse);
+			history.go(-1);
+			//END solution
+			$t.focus(); //cf. note ci-dessus
+			$("html,body").animate( { scrollTop: cible.offset().top },Math.ceil(repere / (8 * Math.abs(niveaux[0] - niveaux[1]))) * repere / 4,"swing");
+	}	});
+
+	$("[href='#debut']").on({
+		click: function (ze) {
+			ze.preventDefault();
+			var repere = $w.height(),
+				title = document.title,
+				adresse = window.location.pathname.replace(/(.*(\\|\/))+/,"");
+			history.pushState({ ancre : "" },title,adresse);
+			//START solution pour le rafraîchissement du :target :
+			history.pushState({ ancre : "#" },title,adresse + "#");
+			history.go(-1);
+			//END solution
+			$b.focus();
+			$("html,body").animate( { scrollTop: 0 },Math.ceil(repere / (8 * $(window).scrollTop())) * repere / 4,"swing");
+	}	});
+
+})();
+</script>
+</body>
+</html>
