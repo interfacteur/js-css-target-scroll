@@ -9,9 +9,9 @@ http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
 
     scroll facultatif, paramétrable, entre éléments ou retour en début de page
     
-* target-pushstate-1-st.html : pour navigateurs standards, méthode du double pushState
-* target-pushstate-2-ie.html : pour Internet Explorer, méthode du focus
-* target-avec-pushstate.html : pour navigateurs standards, méthode du double go
+* target-pushstate-1-st.html : pour navigateurs standards, méthode du _double pushState_
+* target-pushstate-2-ie.html : pour Internet Explorer, méthode du _focus_
+* target-avec-pushstate.html : pour navigateurs standards, méthode du _double go_
 
 *:target : pseudo-classe à concilier avec pushState(), et IE 8 :*
 
