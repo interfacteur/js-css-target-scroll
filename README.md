@@ -1,14 +1,14 @@
 Rafraîchir la pseudo-classe ':target'
 =============
 
-Voir informations détaillées sur    
-http://interfacteur.blogspot.fr/2014/07/target-update-pushstate.html        
+Voir informations détaillées sur
+http://interfacteur.blogspot.fr/2014/07/target-update-pushstate.html
 http://interfacteur.blogspot.fr/2014/07/target-css3-et-js.html
 
 *:target : pseudo-classe rafraîchie avec avec pushState() et autres méthodes de l'API "history :*
 
     scroll facultatif, paramétrable, entre éléments ou retour en début de page
-    
+
 * target-pushstate-1-st.html : pour navigateurs standards, méthode du __double pushState__
 * target-pushstate-2-ie.html : pour Internet Explorer, méthode du __focus__
 * target-avec-pushstate.html : pour navigateurs standards, méthode du __double go__
